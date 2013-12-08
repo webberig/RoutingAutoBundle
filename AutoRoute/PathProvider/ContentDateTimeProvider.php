@@ -45,7 +45,7 @@ class ContentDateTimeProvider extends ContentMethodProvider
         }
 
         $string = $date->format($this->dateFormat);
-        $pathElements = $this->normalizePathElements($string);
+        $pathElements = $this->normalizePathElements($string, get_class($object).'::'.$method);
 
         $routeStack->addPathElements($pathElements);
     }
