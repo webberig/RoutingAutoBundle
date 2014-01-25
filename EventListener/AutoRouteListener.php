@@ -49,6 +49,7 @@ class AutoRouteListener
         $scheduledUpdates = $uow->getScheduledUpdates();
         $updates = array_merge($scheduledInserts, $scheduledUpdates);
 
+        $autoRoute = null;
         foreach ($updates as $document) {
             if ($this->getArm()->isAutoRouteable($document)) {
                 $contexts = $this->getArm()->updateAutoRouteForDocument($document);
@@ -59,6 +60,7 @@ class AutoRouteListener
                     foreach ($context->getRoutes() as $route) {
 
                         if ($route instanceof AutoRoute) {
+                            $autoRoute = $route;
                             $routeParent = $route->getParent();
                             $id = spl_object_hash($routeParent).$route->getName();
                         } else {
@@ -72,14 +74,18 @@ class AutoRouteListener
 
                         $dm->persist($route);
                         $persistedRoutes[$id] = true;
-
-                        // this was originally computeSingleDocumentChangeset
-                        // however this caused problems in a real usecase
-                        // (functional tests were fine)
-                        //
-                        // this is probably not very efficient, but it works
-                        $uow->computeChangeSets();
                     }
+
+                    $uow->computeChangeSets();
+
+                    // For some reason the AutoRoute is not updated even though
+                    // it is persisted above. Re-persisting and recomputing the
+                    // changesets makes this work.
+                    if (null !== $autoRoute) {
+                        $dm->persist($autoRoute);
+                    }
+
+                    $uow->computeChangeSets();
                 }
             }
         }
