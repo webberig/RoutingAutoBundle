@@ -45,4 +45,3 @@ class BaseTestCase extends TestingBaseTestCase
         return $this->db('PHPCR')->getOm();
     }
 }
-

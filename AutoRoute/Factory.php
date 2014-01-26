@@ -122,8 +122,7 @@ class Factory
      */
     public function hasMapping($classFqn)
     {
-        // @todo: Do we need to support inheritance?
-        return isset($this->mapping[$classFqn]);
+        return null === $this->getMapping($classFqn, false) ? false : true;
     }
 
     /**
@@ -165,15 +164,21 @@ class Factory
         return $builderUnit;
     }
 
-    protected function getMapping($classFqn)
+    protected function getMapping($classFqn, $throw = true)
     {
-        if (!isset($this->mapping[$classFqn])) {
-            throw new Exception\ClassNotMappedException($classFqn);
+        $classFqns = class_parents($classFqn);
+        $classFqns[] = $classFqn;
+        $classFqns = array_reverse($classFqns);
+
+        foreach ($classFqns as $classFqn) {
+            if (isset($this->mapping[$classFqn])) {
+                return $this->mapping[$classFqn];
+            }
         }
 
-        $mapping = $this->mapping[$classFqn];
-
-        return $mapping;
+        if (true === $throw) {
+            throw new Exception\ClassNotMappedException($classFqn);
+        }
     }
 
     private function validateMapping($classFqn, $mapping)

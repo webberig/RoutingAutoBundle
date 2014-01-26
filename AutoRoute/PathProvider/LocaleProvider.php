@@ -39,9 +39,10 @@ class LocaleProvider implements PathProviderInterface
         $locale = $context->getLocale();
 
         if (!$locale) {
-            throw new \RuntimeException(
-                'LocaleProvider requires that a locale is set on the BuilderContext'
-            );
+            throw new \RuntimeException(sprintf(
+                'LocaleProvider requires that a locale is set on the BuilderContext for ',
+                get_class($context->getContent())
+            ));
         }
 
         $routeStack->addPathElements(array($locale));

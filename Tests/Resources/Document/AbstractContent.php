@@ -16,9 +16,9 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 use Symfony\Cmf\Bundle\RoutingBundle\Mapping\Annotations as CMFRouting;
 
 /**
- * @PHPCR\Document(translator="child", referenceable=true)
+ * @PHPCR\Document(referenceable=true)
  */
-class Article
+class AbstractContent
 {
     /**
      * @PHPCR\Id()
@@ -34,14 +34,9 @@ class Article
     public $routes;
 
     /**
-     * @PHPCR\String(translated=true)
+     * @PHPCR\String()
      */
     public $title;
-
-    /**
-     * @PHPCR\Locale()
-     */
-    public $locale;
 
     public function getTitle()
     {

@@ -62,7 +62,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testClassNotMappedException()
     {
-        $this->bucf->getRouteStackBuilderUnitChain('FooBar');
+        $this->bucf->getRouteStackBuilderUnitChain('stdClass');
     }
 
     public function provideTestGetChain()
@@ -132,7 +132,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 ->with($assertOptions);
         }
 
-        $this->bucf->registerMapping('FooBar/Class', $config);
-        $this->bucf->getRouteStackBuilderUnitChain('FooBar/Class');
+        $this->bucf->registerMapping('stdClass', $config);
+        $this->bucf->getRouteStackBuilderUnitChain('stdClass');
     }
 }
